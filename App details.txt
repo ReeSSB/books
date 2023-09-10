@@ -1,0 +1,4 @@
+This App has 3 phases
+     1. Local, non-persisted list of books.
+     2. Listof books persisted with outside API.
+     3. Outside API + centralized state.
