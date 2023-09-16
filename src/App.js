@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import BookCreate from "./components/BookCreate";
 import BookList from "./components/BookList";
 
@@ -6,33 +7,46 @@ function App() {
 	//Manage book state
 	const [books, setBooks] = useState([]);
 
-	//Generate ID
-	const idGen = Math.round(Math.random() * 9999);
+	//Get all books
+	const fetchBooks = async () => {
+		const response = await axios.get("http://localhost:3001/books");
+
+		setBooks(response.data);
+	};
+
+	/*
+	DONT DO THIS, IT WILL CREATE A BUG(A INFINITE LOOP).
+	fetchBooks();
+	*/
+
+	//Use of useEffect
+	useEffect(() => {
+		fetchBooks();
+	}, []);
 
 	//Create Books
-	const createBook = (title) => {
-		/*
-		BAD CODE
-		HOT reload error will occur, state will not be updated.
-		books.push({id:123, title:title});
-		setBooks(books);
-		*/
+	const createBook = async (title) => {
+		//Posting data in db.json
+		const response = await axios.post("http://localhost:3001/books", {
+			title, //title is state a variable.
+		});
 
-		/*
-		GOOD CODE
-		Below function copies existing(books) array into new array(updatedBooks)
-		References point at different arrays/objects! React will process the rerender.
-		*/
-
-		const updatedBooks = [...books, { id: idGen, title: title }];
+		//dding books, using state method.
+		const updatedBooks = [...books, response.data];
 		setBooks(updatedBooks);
 	};
 
 	//Edit Books
-	const editBookById = (id, newTitle) => {
+	const editBookById = async (id, newTitle) => {
+		//Update the record in db.json
+		const response = await axios.put(`http://localhost:3001/books/${id}`, {
+			title: newTitle,
+		});
+
+		//Update the state
 		const updatedBooks = books.map((book) => {
 			if (book.id === id) {
-				return { ...book, title: newTitle };
+				return { ...book, ...response.data };
 			}
 			return book;
 		});
@@ -40,7 +54,10 @@ function App() {
 	};
 
 	//Delete Books
-	const deleteBookById = (id) => {
+	const deleteBookById = async (id) => {
+		const response = await axios.delete(`http://localhost:3001/books/${id}`);
+
+		//Update the state by delete record through filter method.
 		const updatedBooks = books.filter((book) => {
 			return book.id !== id;
 		});

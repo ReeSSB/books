@@ -1,4 +1,20 @@
 This App has 3 phases
      1. Local, non-persisted list of books.
-     2. Listof books persisted with outside API.
+     2. List of books persisted with outside API.
      3. Outside API + centralized state.
+
+Things we need to do.
+1. create the API and understand how it works
+2. When app startsup, make a request to API to get the current list of books
+3. When user creates/edits/deletes a book, update the API, then update local data
+
+JSON server setup
+1. Install JSON-Server with NPM at the terminal.
+2. Create a 'db.json' file. This is where data will be stored.
+3. Create a command to run JSON-Server.
+4. Run the Command.
+
+Standalone API Client
+1. Program used to make requests to an API server, specifically for development/test
+2. There are many free API clients
+3. I am going to use one built into VSCode.
