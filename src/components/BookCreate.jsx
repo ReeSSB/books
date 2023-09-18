@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import BooksContext from "../context/books";
 
-function BookCreate({ onCreate }) {
+function BookCreate() {
 	//useState for title creation
 	const [title, setTitle] = useState("");
+
+	const { createBook } = useContext(BooksContext);
 
 	//set title of value to title
 	const handleChange = (event) => {
@@ -12,7 +15,7 @@ function BookCreate({ onCreate }) {
 	//passes title as value using event from child to parent and set title to empty to new title
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		onCreate(title);
+		createBook(title);
 		setTitle("");
 	};
 

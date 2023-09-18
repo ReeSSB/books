@@ -1,18 +1,24 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import BooksContext from "../context/books";
 import BookEdit from "./BookEdit";
 
-function BookShow({ book, onDelete, onEdit }) {
+function BookShow({ book }) {
 	const [showEdit, setShowEdit] = useState(false);
+
+	const { deleteBookById, editBookById } = useContext(BooksContext);
+
+	//Delete books by using id.
+	const handleDeleteClick = () => {
+		deleteBookById(book.id);
+	};
 
 	//Shows form to edit using click event
 	const handleEditClick = () => {
 		setShowEdit(!showEdit);
 	};
-
 	//closes the form card and pass new title as updated title to book state
-	const handleSubmit = (id, newTitle) => {
+	const handleSubmit = () => {
 		setShowEdit(false);
-		onEdit(id, newTitle);
 	};
 
 	//It render book title using variable name content and show the form to edit and call bookedit function component, if showEdit is true.
@@ -20,11 +26,6 @@ function BookShow({ book, onDelete, onEdit }) {
 	if (showEdit) {
 		content = <BookEdit onSubmit={handleSubmit} book={book} />;
 	}
-
-	//Delete books by using id.
-	const handleDeleteClick = () => {
-		onDelete(book.id);
-	};
 
 	return (
 		<div className="book-show">
